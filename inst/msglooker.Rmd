@@ -1,0 +1,125 @@
+---
+params:
+  file:
+    input: file
+    label: Email to View
+    multiple: false
+    value: ""
+output: 
+  html_document_base:
+    pandoc_args: ["--template", "msglooker.template.html"]
+    self_contained: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+if (!requireNamespace("msgxtractr", quietly = TRUE)) {
+  stop("`msgxtractr` is required: devtools::install_github('hrbmstr/msgxtractr')")
+}
+if (!requireNamespace("purrr", quietly = TRUE)) {
+  stop("`purrr` is required: install.packages('purrr')")
+}
+
+`%||%` <- purrr::`%||%`
+
+email <- msgxtractr::read_msg(params$file)
+```
+
+## `r email$subject`
+
+```{r results='asis'}
+if (!is.null(email$headers)) {
+  cat("\n\n<details><summary>Headers</summary>\n")
+  cat("<pre><code>")
+  purrr::iwalk(email$headers, ~ cat("\n", paste0(.y, ": ", unlist(.x)), sep = ""))
+  cat("\n</code></pre>\n</details>")
+}
+```
+
+
+```{r}
+if (!is.null(email$headers)) {
+  headers <- c("Date", "From", "To", "CC", "BCC")
+  hdrs <- email$headers[1, intersect(headers, names(email$headers))]
+  hdrs <- data.frame(
+    x = names(hdrs),
+    y = unlist(hdrs[1, ])
+  )
+} else {
+  fields <- c()
+  values <- c()
+  if (!is.null(email$sender)) {
+    fields <- c(fields, "Sender")
+    values <- c(values, email$sender$sender_name %||% "Unknown Sender")
+  }
+  if (!is.null(email$display_envelope)) {
+    display <- purrr::map_chr(email$display_envelope, ~ .)
+    names(display) <- sub("^display_", "", names(display))
+    names(display) <- paste0(
+      toupper(substr(names(display), 1, 1)),
+      tolower(substring(names(display), 2))
+    )
+    fields <- c(fields, names(display))
+    values <- c(values, unname(display))
+  }
+  hdrs <- data.frame(x = fields, y = values)
+}
+
+knitr::kable(
+  hdrs,
+  row.names = FALSE,
+  col.names = rep("", 2),
+  table.attr = 'class="table headers"',
+  format = "html"
+)
+```
+
+```{css echo=FALSE}
+table.headers tbody tr td:first-child {
+  font-weight: bold;
+}
+```
+
+
+```{r attachments, results='asis'}
+
+if (length(email$attachments)) {
+  cat("\n**Attachments**\n\n")
+  
+  purrr::walk(
+    email$attachments,
+    ~ {
+      cat(
+        '\n\n- <a href="', 
+          base64enc::dataURI(
+            data = .x$content, 
+            mime = .x$mime %||% mime::guess_type(.x$long_filename)
+          ),
+        '" target="_blank"', 
+        paste0('download= "', .x$long_filename, '"'),
+        '>',
+        .x$long_filename, 
+        "</a>",
+        sep = ""
+        )
+    }
+  )
+}
+```
+
+---
+
+```{r include=FALSE}
+valid_html_body <- FALSE
+valid_html_body <- tryCatch({
+  if (is.null(email$body$html)) {
+    return(FALSE)
+  }
+  
+  nchar(email$body$html) > 12
+}, error = function(e) warning(e$message))
+
+body <- if (valid_html_body) email$body$html else email$body$text
+```
+
+`r body`

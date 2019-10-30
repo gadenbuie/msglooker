@@ -1,0 +1,5 @@
+Name: Look at Outlook Message
+Description: Open an Email Saved as an Outlook .msg
+Binding: msg_look_gadget
+Interactive: true
+

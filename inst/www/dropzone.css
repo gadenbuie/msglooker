@@ -1,0 +1,32 @@
+.dropzone::before {
+	content: 'Drop files here';
+	vertical-align: -54px;
+	font-size: 1.5em;
+	color: #666;
+}
+.dropzone {
+	display: none;
+	position: absolute;
+	top: -45px;
+	left: -20px;
+	right: 20px;
+	bottom: 0px;
+	background: #dddd;
+	width: calc(100% + 40px);
+	height: 120px;
+	z-index: 2;
+	text-align: center;
+	border: 2px dashed #666;
+	border-radius: 5px;
+}
+.shiny-file-input-active .dropzone,
+.shiny-file-input-over .dropzone {
+	display: table-cell;
+}
+.shiny-file-input-over .dropzone {
+	border-color: rgba(76, 174, 76);
+	background: rgb(194, 225, 194);
+}
+.shiny-file-input-over .dropzone::before {
+	color: rgba(76, 174, 76);
+}

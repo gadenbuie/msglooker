@@ -1,0 +1,14 @@
+.email-container:not(.has-email-preview) {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+.email-upload {
+  width: 100%;
+}
+#download {
+	color: #333;
+	text-decoration: none;
+}

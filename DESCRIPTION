@@ -1,0 +1,27 @@
+Package: msglooker
+Title: A Shiny App to View And Export Outlook Messages
+Version: 0.0.1
+Authors@R: 
+    person(given = "Garrick",
+           family = "Aden-Buie",
+           role = c("aut", "cre"),
+           email = "gadenbuie@mail.usf.edu",
+           comment = c(ORCID = "0000-0002-7111-0077"))
+Description: A Shiny app to view and download Outlook emails
+    saved as ".msg" files in self-contained HTML.
+License: MIT + file LICENSE
+Imports: 
+    base64enc,
+    knitr,
+    mime,
+    msgxtractr (>= 0.2.1),
+    purrr,
+    rmarkdown,
+    rvest,
+    shiny
+Remotes: 
+    hrbrmstr/msgxtractr
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1
