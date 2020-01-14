@@ -14,7 +14,7 @@ You can install the released version of msglooker from GitHub.
 
 ``` r
 # install.packages("devtools")
-devtools::install_packages("gadenbuie/msglooker")
+devtools::install_github("gadenbuie/msglooker")
 ```
 
 ## How To Use
