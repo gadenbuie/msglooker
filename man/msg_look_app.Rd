@@ -14,7 +14,7 @@ msg_look_gadget(..., viewer = shiny::paneViewer())
 
 \item{viewer}{Specify where the gadget should be displayed--viewer pane,
 dialog window, or external browser--by passing in a call to one of the
-\code{\link[=viewer]{viewer()}} functions.}
+\code{\link[shiny:viewer]{viewer()}} functions.}
 }
 \description{
 Runs a Shiny app or gadget to read an Outlook message by dragging the \code{.msg}

@@ -5,14 +5,18 @@
 \alias{msg2html}
 \title{Read and Write an Outlook Message to Self-Contained HTML}
 \usage{
-read_msg(path = file.choose())
+read_msg(input = file.choose())
 
-msg2html(path = file.choose(), output = file.choose(new = TRUE))
+msg2html(input = file.choose(), output = NULL, quiet = TRUE, theme = NULL)
 }
 \arguments{
-\item{path}{The path to the msg}
+\item{input}{The path to the msg}
 
 \item{output}{The path to the new HTML file where the email will be saved}
+
+\item{quiet}{Passed to \code{\link[rmarkdown:render]{rmarkdown::render()}}}
+
+\item{theme}{Passed to \code{\link[rmarkdown:html_document]{rmarkdown::html_document()}}}
 }
 \description{
 Read an email saved from Outlook on Windows to a \code{.msg} file into R, or write

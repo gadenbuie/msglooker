@@ -111,24 +111,36 @@ msg_look_shiny <- function() {
 #' Read an email saved from Outlook on Windows to a `.msg` file into R, or write
 #' an email into a self-contained HTML file.
 #'
-#' @param path The path to the msg
+#' @param input The path to the msg
 #' @param output The path to the new HTML file where the email will be saved
 #'
 #' @export
-read_msg <- function(path = file.choose()) {
-	msgxtractr::read_msg(path)
+read_msg <- function(input = file.choose()) {
+	msgxtractr::read_msg(input)
 }
 
 #' @rdname read_msg
+#' @param quiet Passed to [rmarkdown::render()]
+#' @param theme Passed to [rmarkdown::html_document()]
 #' @export
-msg2html <- function(path = file.choose(), output = file.choose(new = TRUE)) {
-	path <- normalizePath(path, mustWork = TRUE)
+msg2html <- function(input = file.choose(), output = NULL, quiet = TRUE, theme = NULL) {
+	input <- normalizePath(input, mustWork = TRUE)
+	input_dir <- dirname(input)
+	input_name <- sub("[.]msg$", "", basename(input))
+	if (is.null(output)) {
+		output <- file.path(input_dir, paste0(input_name, ".html"))
+	}
 	output <- normalizePath(output, mustWork = FALSE)
 	rmarkdown::render(
 		input = pkg_file("msglooker.Rmd"),
+		output_dir = dirname(output),
 		output_file = output,
-		output_options = list(title = basename(path)),
-		params = list(file = path)
+		output_options = list(
+			pandoc_args = c("--metadata", paste0("title=", basename(input))),
+			theme = theme
+		),
+		params = list(file = input),
+		quiet = quiet
 	)
 }
 
