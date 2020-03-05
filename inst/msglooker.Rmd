@@ -116,7 +116,8 @@ valid_html_body <- tryCatch({
     return(FALSE)
   }
   
-  nchar(email$body$html) > 12
+  nchar_html <- nchar(email$body$html, allowNA = TRUE)
+  !is.na(nchar_html) && nchar_html > 12
 }, error = function(e) warning(e$message))
 
 body <- if (valid_html_body) email$body$html else email$body$text
