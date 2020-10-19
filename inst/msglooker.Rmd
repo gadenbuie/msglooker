@@ -11,6 +11,8 @@ output:
     self_contained: no
 ---
 
+<div class="container container-email">
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 if (!requireNamespace("msgxtractr", quietly = TRUE)) {
@@ -124,3 +126,5 @@ body <- if (valid_html_body) email$body$html else email$body$text
 ```
 
 `r body`
+
+</div>

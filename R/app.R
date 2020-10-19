@@ -123,25 +123,33 @@ read_msg <- function(input = file.choose()) {
 #' @param quiet Passed to [rmarkdown::render()]
 #' @param theme Passed to [rmarkdown::html_document()]
 #' @export
-msg2html <- function(input = file.choose(), output = NULL, quiet = TRUE, theme = NULL) {
-	input <- normalizePath(input, mustWork = TRUE)
-	input_dir <- dirname(input)
-	input_name <- sub("[.]msg$", "", basename(input))
-	if (is.null(output)) {
-		output <- file.path(input_dir, paste0(input_name, ".html"))
-	}
-	output <- normalizePath(output, mustWork = FALSE)
-	rmarkdown::render(
-		input = pkg_file("msglooker.Rmd"),
-		output_dir = dirname(output),
-		output_file = output,
-		output_options = list(
-			pandoc_args = c("--metadata", paste0("title=", basename(input))),
-			theme = theme
-		),
-		params = list(file = input),
-		quiet = quiet
-	)
+msg2html <- function(
+  input = file.choose(),
+  output_file = NULL,
+  output_dir = NULL,
+  quiet = TRUE,
+  theme = NULL
+) {
+  input <- normalizePath(input, mustWork = TRUE)
+  input_dir <- dirname(input)
+  input_name <- sub("[.]msg$", "", basename(input))
+  if (is.null(output_file)) {
+    output_file <- paste0(input_name, ".html")
+  }
+  if (is.null(output_dir)) {
+  	output_dir <- input_dir
+  }
+  rmarkdown::render(
+    input = pkg_file("msglooker.Rmd"),
+    output_dir = output_dir,
+    output_file = output_file,
+    output_options = list(
+      pandoc_args = c("--metadata", paste0("pagetitle=", basename(input))),
+      theme = theme
+    ),
+    params = list(file = input),
+    quiet = quiet
+  )
 }
 
 
